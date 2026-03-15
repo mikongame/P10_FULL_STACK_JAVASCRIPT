@@ -24,7 +24,6 @@ export const Header = () => {
     </div>
   `;
   
-  // Setup navigation
   header.querySelectorAll('[data-navigate]').forEach(el => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
@@ -33,7 +32,6 @@ export const Header = () => {
     });
   });
   
-  // Setup logout
   const logoutBtn = header.querySelector('#logout-btn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', logout);

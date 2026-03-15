@@ -27,7 +27,6 @@ export const EventList = async () => {
     <div id="events-container"></div>
   `;
   
-  // Setup create event button
   const createBtn = container.querySelector('#create-event-btn');
   if (createBtn) {
     createBtn.addEventListener('click', () => {
@@ -35,13 +34,11 @@ export const EventList = async () => {
     });
   }
   
-  // Setup sorting
   container.querySelector('#sort-select').addEventListener('change', async (e) => {
     const [sortBy, order] = e.target.value.split('-');
     await loadEvents(container, sortBy, order);
   });
   
-  // Load initial events
   await loadEvents(container);
   
   return container;

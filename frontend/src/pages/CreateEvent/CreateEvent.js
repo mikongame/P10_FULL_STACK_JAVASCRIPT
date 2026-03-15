@@ -29,7 +29,6 @@ export const CreateEvent = () => {
     </div>
   `;
 
-  // Render fields
   const fields = container.querySelector('#form-fields');
   fields.appendChild(FormInput({ label: 'Título del Evento', name: 'title', required: true, placeholder: 'Ej: Noche de la Hamburguesa' }));
   fields.appendChild(FormTextArea({ label: 'Descripción', name: 'description', placeholder: 'Describe tu evento...' }));
@@ -43,23 +42,19 @@ export const CreateEvent = () => {
   fields.appendChild(FormInput({ label: 'Cartel del Evento', name: 'poster', type: 'file', accept: 'image/*' }));
 
   
-  // Cancel button
   container.querySelector('#cancel-btn').addEventListener('click', () => {
     sessionStorage.removeItem('editEventId');
     window.navigateTo('/');
   });
   
-  // Form submission
   container.querySelector('#event-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
     
     try {
-      // Remove previous messages
       form.querySelectorAll('.error-message, .success-message').forEach(m => m.remove());
       
-      // Show loading
       const btn = form.querySelector('button[type="submit"]');
       btn.disabled = true;
       btn.textContent = eventId ? 'Guardando...' : 'Creando...';
@@ -86,7 +81,6 @@ export const CreateEvent = () => {
     }
   });
   
-  // If editing, load event data
   if (eventId) {
     loadEventData(container, eventId);
   }

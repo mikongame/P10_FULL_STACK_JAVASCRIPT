@@ -34,12 +34,10 @@ export const LoginRegister = () => {
     </div>
   `;
 
-  // Render Login Fields
   const loginFields = container.querySelector('#login-fields');
   loginFields.appendChild(FormInput({ label: 'Email', name: 'email', type: 'email', placeholder: 'tu@email.com', required: true }));
   loginFields.appendChild(FormInput({ label: 'Contraseña', name: 'password', type: 'password', placeholder: '••••••••', required: true }));
 
-  // Render Register Fields
   const registerFields = container.querySelector('#register-fields');
   registerFields.appendChild(FormInput({ label: 'Nombre', name: 'name', placeholder: 'Tu nombre', required: true }));
   registerFields.appendChild(FormInput({ label: 'Email', name: 'email', type: 'email', placeholder: 'tu@email.com', required: true }));
@@ -47,7 +45,6 @@ export const LoginRegister = () => {
   registerFields.appendChild(FormInput({ label: 'Avatar (opcional)', name: 'avatar', type: 'file', accept: 'image/*' }));
 
   
-  // Tab switching
   container.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const tab = btn.getAttribute('data-tab');
@@ -58,24 +55,20 @@ export const LoginRegister = () => {
     });
   });
   
-  // Login handler
   container.querySelector('#login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
     
-    // Validation
     if (!validateEmail(data.email)) {
       form.prepend(ErrorMessage('Email inválido'));
       return;
     }
     
     try {
-      // Remove previous messages
       form.querySelectorAll('.error-message, .success-message').forEach(m => m.remove());
       
-      // Show loading
       const btn = form.querySelector('button[type="submit"]');
       btn.disabled = true;
       btn.textContent = 'Entrando...';
@@ -99,13 +92,11 @@ export const LoginRegister = () => {
     }
   });
   
-  // Register handler
   container.querySelector('#register-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
     
-    // Validation
     const email = formData.get('email');
     const password = formData.get('password');
     
@@ -120,10 +111,8 @@ export const LoginRegister = () => {
     }
     
     try {
-      // Remove previous messages
       form.querySelectorAll('.error-message, .success-message').forEach(m => m.remove());
       
-      // Show loading
       const btn = form.querySelector('button[type="submit"]');
       btn.disabled = true;
       btn.textContent = 'Creando cuenta...';
@@ -133,7 +122,6 @@ export const LoginRegister = () => {
         body: formData
       });
       
-      // Auto-login
       saveAuth(response.user, response.token);
       form.prepend(SuccessMessage('¡Cuenta creada! Redirigiendo...'));
       

@@ -12,7 +12,6 @@ body {
   line-height: 1.6;
 }
 
-/* Header Styles */
 .main-header {
   background: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -133,7 +132,6 @@ body {
   background: #5a6268;
 }
 
-/* Loading Spinner */
 .loading-spinner {
   display: flex;
   flex-direction: column;
@@ -195,7 +193,6 @@ body {
   opacity: 1;
 }
 
-/* Not Found */
 .not-found {
   display: flex;
   justify-content: center;
@@ -204,7 +201,6 @@ body {
   color: #999;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .header-content {
     flex-direction: column;
