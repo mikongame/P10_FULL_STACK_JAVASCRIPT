@@ -38,7 +38,6 @@ const seedDatabase = async () => {
     await Event.deleteMany({});
     await Task.deleteMany({});
 
-    // Crear usuarios de prueba (sin cambios)...
     console.log('👥 Creando usuarios de prueba...');
     
     const users = await User.create([

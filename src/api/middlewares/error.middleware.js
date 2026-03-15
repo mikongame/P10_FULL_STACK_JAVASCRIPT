@@ -1,4 +1,3 @@
-// Middleware global para manejo de errores
 export const globalErrorHandler = (err, req, res, next) => {
   console.error('🔥 Error:', err);
 
@@ -8,12 +7,10 @@ export const globalErrorHandler = (err, req, res, next) => {
   res.status(statusCode).json({
     status: 'error',
     message: message,
-    // En producción borraríamos el stack
     stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack
   });
 };
 
-// Clase personalizada para errores operacionales (opcional, pero buena práctica)
 export class AppError extends Error {
   constructor(message, statusCode) {
     super(message);

@@ -9,6 +9,4 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// cloudinary.uploader.upload(filePath, { folder: 'plans' })
-
 export default cloudinary;

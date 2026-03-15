@@ -7,7 +7,6 @@ const eventSchema = new mongoose.Schema({
   date: { type: Date, required: true },
   location: { type: String, required: true },
   
-  // Relaciones
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
   attendees: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]

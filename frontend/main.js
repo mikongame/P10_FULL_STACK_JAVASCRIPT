@@ -4,7 +4,6 @@ import { EventList } from './src/pages/EventList/EventList.js';
 import { EventDetail } from './src/pages/EventDetail/EventDetail.js';
 import { CreateEvent } from './src/pages/CreateEvent/CreateEvent.js';
 
-// Routes configuration
 const routes = {
   '/': EventList,
   '/login': LoginRegister,
@@ -12,16 +11,13 @@ const routes = {
   '/event/:eventId': EventDetail,
 };
 
-// Router
 const router = async () => {
   const path = window.location.pathname;
   
-  // Render header
   const headerRoot = document.getElementById('header-root');
   headerRoot.innerHTML = '';
   headerRoot.appendChild(Header());
   
-  // Find matching route
   let matchedRoute = null;
   let params = {};
   
@@ -32,7 +28,6 @@ const router = async () => {
     if (match) {
       matchedRoute = component;
       
-      // Extract parameters
       const paramNames = route.match(/:\w+/g) || [];
       paramNames.forEach((param, index) => {
         params[param.slice(1)] = match[index + 1];
@@ -42,7 +37,6 @@ const router = async () => {
     }
   }
   
-  // Render page
   const main = document.getElementById('main-content');
   main.innerHTML = '';
   
@@ -54,14 +48,11 @@ const router = async () => {
   }
 };
 
-// Navigation function
 window.navigateTo = (path) => {
   window.history.pushState({}, '', path);
   router();
 };
 
-// Handle browser back/forward
 window.addEventListener('popstate', router);
 
-// Initial load
 router();

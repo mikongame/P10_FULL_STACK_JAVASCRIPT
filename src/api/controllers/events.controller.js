@@ -66,7 +66,6 @@ export const updateEvent = catchAsync(async (req, res, next) => {
     return next(new AppError('Solo el creador puede editar el evento', 403));
   }
 
-  // Limpieza de imagen antigua si se sube una nueva
   if (req.file?.path && event.poster) {
     const publicId = event.poster.split('/').pop().split('.')[0];
     await cloudinary.uploader.destroy(publicId).catch(err => console.warn('Error borrando imagen antigua:', err));

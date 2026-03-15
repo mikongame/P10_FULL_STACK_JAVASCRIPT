@@ -113,18 +113,12 @@ export const EventDetail = async (params) => {
     const editBtn = container.querySelector('#edit-event-btn');
     if (editBtn) {
       editBtn.addEventListener('click', () => {
-        // En una SPA real, esto pasaría params a CreateEvent
         window.history.pushState({ eventId }, '', '/create-event');
-        // Para simplificar en este router custom, usamos una variable global o similar
-        // Pero para el propósito de este ejercicio, CreateEvent aceptará el ID de la URL o estado
         sessionStorage.setItem('editEventId', eventId);
         window.navigateTo('/create-event');
       });
     }
 
-    // ... rest of event listeners (attend, leave, delete) ...
-
-    // Attend event
     const attendBtn = container.querySelector('#attend-event-btn');
     if (attendBtn) {
       attendBtn.addEventListener('click', async () => {

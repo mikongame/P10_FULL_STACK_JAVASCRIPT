@@ -6,7 +6,6 @@ const taskSchema = new mongoose.Schema({
   image: String,
   event: { type: mongoose.Schema.Types.ObjectId, ref: "Event", required: true },
   
-  // Preparado para asignación futura (Fase 2)
   assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, {
   timestamps: true
