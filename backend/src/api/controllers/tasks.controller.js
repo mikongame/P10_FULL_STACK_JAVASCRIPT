@@ -26,7 +26,7 @@ export const createTask = catchAsync(async (req, res, next) => {
     return next(new AppError('Solo el creador del evento puede añadir tareas', 403));
   }
 
-  const task = await Task.create({ name, event: eventId, image });
+  const task = await Task.create({ name, event: eventId, image, assignedTo: req.body.assignedTo || null });
   await Event.findByIdAndUpdate(eventId, { $addToSet: { tasks: task._id } });
 
   res.status(201).json(task);

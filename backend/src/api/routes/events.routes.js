@@ -14,12 +14,10 @@ import upload from '../middlewares/upload.js';
 
 const router = Router();
 
-// Rutas públicas
 router.get('/', getAllEvents);
 router.get('/:id/attendees', getAttendees);
 router.get('/:id', getEventById);
 
-// Rutas protegidas (requieren autenticación)
 router.post('/', isAuth, upload.single('poster'), createEvent);
 router.post('/:id/attend', isAuth, attendEvent);
 router.delete('/:id/leave', isAuth, leaveEvent);

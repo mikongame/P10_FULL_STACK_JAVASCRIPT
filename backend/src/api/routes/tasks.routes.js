@@ -11,11 +11,9 @@ import upload from '../middlewares/upload.js';
 
 const router = Router();
 
-// Rutas públicas
 router.get('/', getAllTasks);
 router.get('/:id', getTaskById);
 
-// Rutas protegidas (requieren autenticación)
 router.post('/', isAuth, upload.single('image'), createTask);
 router.put('/:id', isAuth, upload.single('image'), updateTask);
 router.delete('/:id', isAuth, deleteTask);

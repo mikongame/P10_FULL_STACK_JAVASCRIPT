@@ -1,21 +1,19 @@
 import { apiFetch } from '../../utils/api.js';
-import { isAuthenticated, getUser } from '../../utils/auth.js';
-import { LoadingSpinner } from '../../components/LoadingSpinner.js';
+import { isAuthenticated } from '../../utils/auth.js';
 import { ErrorMessage, SuccessMessage } from '../../components/Messages.js';
-import { formatDate } from '../../utils/helpers.js';
 import { FormInput, FormTextArea } from '../../components/FormInput.js';
 import './CreateEvent.css';
 
-export const CreateEvent = () => {
-  const eventId = sessionStorage.getItem('editEventId');
+export const CreateEvent = (params = {}) => {
+  const eventId = params.eventId || null;
   const container = document.createElement('div');
   container.className = 'create-event-page';
-  
+
   if (!isAuthenticated()) {
     window.navigateTo('/login');
     return container;
   }
-  
+
   container.innerHTML = `
     <div class="create-event-container">
       <h1>${eventId ? 'Editar Evento' : 'Crear Nuevo Evento'}</h1>
@@ -32,44 +30,38 @@ export const CreateEvent = () => {
   const fields = container.querySelector('#form-fields');
   fields.appendChild(FormInput({ label: 'Título del Evento', name: 'title', required: true, placeholder: 'Ej: Noche de la Hamburguesa' }));
   fields.appendChild(FormTextArea({ label: 'Descripción', name: 'description', placeholder: 'Describe tu evento...' }));
-  
+
   const row = document.createElement('div');
   row.className = 'form-row';
   row.appendChild(FormInput({ label: 'Fecha', name: 'date', type: 'date', required: true }));
   row.appendChild(FormInput({ label: 'Ubicación', name: 'location', required: true, placeholder: 'Ej: Casa de Juan' }));
   fields.appendChild(row);
-  
+
   fields.appendChild(FormInput({ label: 'Cartel del Evento', name: 'poster', type: 'file', accept: 'image/*' }));
 
-  
   container.querySelector('#cancel-btn').addEventListener('click', () => {
-    sessionStorage.removeItem('editEventId');
     window.navigateTo('/');
   });
-  
+
   container.querySelector('#event-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    
+
     try {
       form.querySelectorAll('.error-message, .success-message').forEach(m => m.remove());
-      
+
       const btn = form.querySelector('button[type="submit"]');
       btn.disabled = true;
       btn.textContent = eventId ? 'Guardando...' : 'Creando...';
-      
+
       const endpoint = eventId ? `/events/${eventId}` : '/events';
       const method = eventId ? 'PUT' : 'POST';
-      
-      await apiFetch(endpoint, {
-        method,
-        body: formData
-      });
-      
-      sessionStorage.removeItem('editEventId');
+
+      await apiFetch(endpoint, { method, body: formData });
+
       form.prepend(SuccessMessage(`Evento ${eventId ? 'actualizado' : 'creado'} exitosamente`));
-      
+
       setTimeout(() => {
         window.navigateTo('/');
       }, 1500);
@@ -80,11 +72,11 @@ export const CreateEvent = () => {
       btn.textContent = eventId ? 'Guardar Cambios' : 'Crear Evento';
     }
   });
-  
+
   if (eventId) {
     loadEventData(container, eventId);
   }
-  
+
   return container;
 };
 
@@ -92,7 +84,7 @@ async function loadEventData(container, eventId) {
   try {
     const event = await apiFetch(`/events/${eventId}`);
     const form = container.querySelector('#event-form');
-    
+
     form.querySelector('[name="title"]').value = event.title;
     form.querySelector('[name="description"]').value = event.description || '';
     form.querySelector('[name="date"]').value = event.date.split('T')[0];

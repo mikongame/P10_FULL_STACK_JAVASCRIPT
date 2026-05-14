@@ -8,9 +8,16 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "keywords": ["events", "spa", "vanilla-js"],
+  "keywords": [
+    "events",
+    "spa",
+    "vanilla-js"
+  ],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "socket.io-client": "^4.8.3"
+  },
   "devDependencies": {
     "vite": "^5.0.0"
   }

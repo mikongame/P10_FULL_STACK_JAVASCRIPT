@@ -32,7 +32,7 @@ export const getAllEvents = catchAsync(async (req, res) => {
 
 export const getEventById = catchAsync(async (req, res, next) => {
   const event = await Event.findById(req.params.id)
-    .populate('tasks')
+    .populate({ path: 'tasks', populate: { path: 'assignedTo', select: 'name' } })
     .populate('attendees', 'name email avatar')
     .populate('createdBy', 'name email');
     

@@ -8,6 +8,7 @@ const routes = {
   '/': EventList,
   '/login': LoginRegister,
   '/create-event': CreateEvent,
+  '/edit-event/:eventId': CreateEvent,
   '/event/:eventId': EventDetail,
 };
 
