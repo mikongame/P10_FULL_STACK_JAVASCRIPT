@@ -102,7 +102,6 @@ export const EventDetail = async (params) => {
 
     const tasksList = container.querySelector('#tasks-list');
 
-    // Socket.io: tareas en tiempo real (funciona en local, no en Vercel serverless)
     socket.connect();
     socket.on('task-added', (newTask) => {
       if (newTask.event !== eventId && newTask.event?._id !== eventId) return;
@@ -111,7 +110,6 @@ export const EventDetail = async (params) => {
       tasksList.insertAdjacentHTML('beforeend', renderTask(newTask));
     });
 
-    // Toggle tarea hecha (creador o asistente, con event delegation)
     if (isCreator || isAttending) {
       tasksList.addEventListener('change', async (e) => {
         if (e.target.type !== 'checkbox') return;
@@ -152,12 +150,9 @@ export const EventDetail = async (params) => {
             body: JSON.stringify(body)
           });
 
-          // Añadir al DOM directamente (no depende de socket)
           const empty = tasksList.querySelector('.empty-state');
           if (empty) empty.remove();
           tasksList.insertAdjacentHTML('beforeend', renderTask(task));
-
-          // Emitir también por socket para otras pestañas (cuando funcione)
           socket.emit('new-task', { ...task, event: eventId });
 
           input.value = '';

@@ -49,10 +49,7 @@ app.use((req, res, next) => {
 app.use(globalErrorHandler);
 
 io.on('connection', (socket) => {
-  console.log('🟢 Usuario conectado');
-
   socket.on('disconnect', () => {
-    console.log('🔴 Usuario desconectado');
   });
 
   socket.on('new-task', (data) => {
