@@ -36,8 +36,10 @@ export const updateTask = catchAsync(async (req, res, next) => {
   const task = await Task.findById(req.params.id).populate('event');
   if (!task) return next(new AppError('Tarea no encontrada', 404));
 
-  if (task.event.createdBy.toString() !== req.user._id.toString()) {
-    return next(new AppError('Solo el creador del evento puede editar tareas', 403));
+  const isCreator = task.event.createdBy.toString() === req.user._id.toString();
+  const isAttendee = task.event.attendees.map(a => a.toString()).includes(req.user._id.toString());
+  if (!isCreator && !isAttendee) {
+    return next(new AppError('Solo el creador o asistentes del evento pueden editar tareas', 403));
   }
 
   if (req.file?.path && task.image) {

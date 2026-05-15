@@ -21,7 +21,7 @@ export const EventDetail = async (params) => {
 
     const renderTask = (task) => `
       <div class="task-item ${task.done ? 'done' : ''}" data-task-id="${task._id}">
-        <input type="checkbox" ${task.done ? 'checked' : ''} ${isCreator ? '' : 'disabled'}>
+        <input type="checkbox" ${task.done ? 'checked' : ''} ${(isCreator || isAttending) ? '' : 'disabled'}>
         <span>${task.name}</span>
         ${task.assignedTo?.name ? `<small class="task-assigned">→ ${task.assignedTo.name}</small>` : ''}
       </div>
@@ -111,8 +111,8 @@ export const EventDetail = async (params) => {
       tasksList.insertAdjacentHTML('beforeend', renderTask(newTask));
     });
 
-    // Toggle tarea hecha (solo creador, con event delegation)
-    if (isCreator) {
+    // Toggle tarea hecha (creador o asistente, con event delegation)
+    if (isCreator || isAttending) {
       tasksList.addEventListener('change', async (e) => {
         if (e.target.type !== 'checkbox') return;
         const taskItem = e.target.closest('.task-item');
