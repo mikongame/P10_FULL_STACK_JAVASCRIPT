@@ -1,9 +1,9 @@
 import { apiFetch } from '../../utils/api.js';
 import { saveAuth } from '../../utils/auth.js';
-import { LoadingSpinner } from '../../components/LoadingSpinner.js';
 import { ErrorMessage, SuccessMessage } from '../../components/Messages.js';
 import { validateEmail, validatePassword } from '../../utils/helpers.js';
 import { FormInput } from '../../components/FormInput.js';
+import './LoginRegister.css';
 
 export const LoginRegister = () => {
   const container = document.createElement('div');
