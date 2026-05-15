@@ -20,8 +20,8 @@ export const EventDetail = async (params) => {
     const isAttending = user && event.attendees.some(a => a._id === user._id);
 
     const renderTask = (task) => `
-      <div class="task-item ${task.done ? 'done' : ''}">
-        <input type="checkbox" ${task.done ? 'checked' : ''} disabled>
+      <div class="task-item ${task.done ? 'done' : ''}" data-task-id="${task._id}">
+        <input type="checkbox" ${task.done ? 'checked' : ''} ${isCreator ? '' : 'disabled'}>
         <span>${task.name}</span>
         ${task.assignedTo?.name ? `<small class="task-assigned">→ ${task.assignedTo.name}</small>` : ''}
       </div>
@@ -100,17 +100,38 @@ export const EventDetail = async (params) => {
       </div>
     `;
 
-    // Socket.io: escuchar tareas nuevas en tiempo real
+    const tasksList = container.querySelector('#tasks-list');
+
+    // Socket.io: tareas en tiempo real (funciona en local, no en Vercel serverless)
     socket.connect();
     socket.on('task-added', (newTask) => {
       if (newTask.event !== eventId && newTask.event?._id !== eventId) return;
-      const tasksList = container.querySelector('#tasks-list');
       const empty = tasksList.querySelector('.empty-state');
       if (empty) empty.remove();
       tasksList.insertAdjacentHTML('beforeend', renderTask(newTask));
     });
 
-    // Add task
+    // Toggle tarea hecha (solo creador, con event delegation)
+    if (isCreator) {
+      tasksList.addEventListener('change', async (e) => {
+        if (e.target.type !== 'checkbox') return;
+        const taskItem = e.target.closest('.task-item');
+        const taskId = taskItem.dataset.taskId;
+        const done = e.target.checked;
+        try {
+          await apiFetch(`/tasks/${taskId}`, {
+            method: 'PUT',
+            body: JSON.stringify({ done })
+          });
+          taskItem.classList.toggle('done', done);
+        } catch (error) {
+          e.target.checked = !done;
+          container.prepend(ErrorMessage(error.message));
+        }
+      });
+    }
+
+    // Añadir tarea
     const addTaskBtn = container.querySelector('#add-task-btn');
     if (addTaskBtn) {
       addTaskBtn.addEventListener('click', async () => {
@@ -131,6 +152,12 @@ export const EventDetail = async (params) => {
             body: JSON.stringify(body)
           });
 
+          // Añadir al DOM directamente (no depende de socket)
+          const empty = tasksList.querySelector('.empty-state');
+          if (empty) empty.remove();
+          tasksList.insertAdjacentHTML('beforeend', renderTask(task));
+
+          // Emitir también por socket para otras pestañas (cuando funcione)
           socket.emit('new-task', { ...task, event: eventId });
 
           input.value = '';
@@ -145,7 +172,7 @@ export const EventDetail = async (params) => {
       });
     }
 
-    // Edit event — URL param en lugar de sessionStorage
+    // Editar evento
     const editBtn = container.querySelector('#edit-event-btn');
     if (editBtn) {
       editBtn.addEventListener('click', () => {
